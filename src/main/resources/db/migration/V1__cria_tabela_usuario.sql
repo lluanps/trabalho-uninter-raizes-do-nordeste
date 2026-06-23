@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS usuario (
+    id BIGSERIAL PRIMARY KEY,
+    nome VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    cpf VARCHAR(14) NOT NULL,
+    perfil VARCHAR(20) NOT NULL CHECK(perfil IN ('ADMIN', 'GERENTE', 'CLIENTE', 'COZINHA', 'ATENDENTE')),
+    consentimento_lgpd BOOLEAN NOT NULL DEFAULT FALSE,
+    consentimento_data TIMESTAMP,
+    ativo BOOLEAN NOT NULL DEFAULT TRUE,
+    criado_em TIMESTAMP not null DEFAULT NOW(),
+    atualizado_em TIMESTAMP not null DEFAULT NOW()
+)
