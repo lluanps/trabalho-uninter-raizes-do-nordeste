@@ -40,11 +40,11 @@ public class AuthService {
     @Transactional
     public UsuarioResponse registrar(RegistroRequest request) {
         if (usuarioRepository.existsByEmail(request.getEmail())) {
-            throw new BussinessException("Email ja existe em nosso sistema, email: ", request.getEmail());
+            throw new BussinessException("Email ja existe em nosso sistema, email: " + request.getEmail());
         }
 
         if (usuarioRepository.existsByCpf(request.getCpf())) {
-            throw new BussinessException("CPF ja cadastrado em nosso sistema, cpf:", request.getCpf());
+            throw new BussinessException("CPF ja cadastrado em nosso sistema, cpf: " + request.getCpf());
         }
 
         Usuario usuario = Usuario.builder()
