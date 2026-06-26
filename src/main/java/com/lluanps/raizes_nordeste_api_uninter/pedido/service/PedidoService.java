@@ -8,6 +8,7 @@ import com.lluanps.raizes_nordeste_api_uninter.estoque.model.MovimentacaoEstoque
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.EstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.MovimentacaoEstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.fidelidade.service.FidelidadeService;
 import com.lluanps.raizes_nordeste_api_uninter.pedido.dto.*;
 import com.lluanps.raizes_nordeste_api_uninter.pedido.model.HistoricoStatusPedido;
 import com.lluanps.raizes_nordeste_api_uninter.pedido.model.ItemPedido;
@@ -62,6 +63,9 @@ public class PedidoService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private FidelidadeService fidelidadeService;
 
     private static final Map<StatusPedido, Set<StatusPedido>> TRANSICOES_VALIDAS = Map.of(
             StatusPedido.PENDENTE, Set.of(StatusPedido.EM_PREPARO, StatusPedido.CANCELADO),
@@ -188,6 +192,10 @@ public class PedidoService {
 
         pedido.setStatus(novoStatus);
         pedido = pedidoRepository.save(pedido);
+
+        if (novoStatus == StatusPedido.ENTREGUE) {
+            fidelidadeService.creditarPontos( pedido.getUsuario().getId(), pedido.getValorTotal(), pedido);
+        }
 
         List<ItemPedido> itens = itemPedidoRepository.findByPedidoId(pedidoId);
         return toResponse(pedido, itens);
