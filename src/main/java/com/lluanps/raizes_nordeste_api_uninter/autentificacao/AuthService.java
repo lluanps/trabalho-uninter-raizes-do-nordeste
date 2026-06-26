@@ -2,6 +2,7 @@ package com.lluanps.raizes_nordeste_api_uninter.autentificacao;
 
 import com.lluanps.raizes_nordeste_api_uninter.enums.Perfil;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.logs.service.LogAuditoriaService;
 import com.lluanps.raizes_nordeste_api_uninter.security.JwtService;
 import com.lluanps.raizes_nordeste_api_uninter.security.dto.LoginRequest;
 import com.lluanps.raizes_nordeste_api_uninter.security.dto.TokenResponse;
@@ -33,6 +34,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
+    private final LogAuditoriaService logAuditoriaService;
 
     @Value("${jwt.expiration}")
     private long jwtExpiration;
@@ -61,10 +63,10 @@ public class AuthService {
 
         usuario = usuarioRepository.save(usuario);
 
-        log.info( "Usuário criado. email={}, id={}",
-                usuario.getEmail(),
-                usuario.getId()
-        );
+        log.info( "Usuário criado. email={}, id={}", usuario.getEmail(), usuario.getId());
+
+        logAuditoriaService.registrar(request.getEmail(), "USUARIO_CRIADO",
+                "Usuario", usuario.getId(), "Registro via /auth/registro");
 
         return toUsuarioResponse(usuario);
     }
