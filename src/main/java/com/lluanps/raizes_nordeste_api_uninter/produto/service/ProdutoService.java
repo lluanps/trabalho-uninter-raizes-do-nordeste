@@ -3,6 +3,7 @@ package com.lluanps.raizes_nordeste_api_uninter.produto.service;
 import com.lluanps.raizes_nordeste_api_uninter.estoque.model.Estoque;
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.EstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.exceptions.NotFoundException;
 import com.lluanps.raizes_nordeste_api_uninter.produto.dto.ProdutoRequest;
 import com.lluanps.raizes_nordeste_api_uninter.produto.dto.ProdutoResponse;
 import com.lluanps.raizes_nordeste_api_uninter.produto.mapper.ProdutoMapper;
@@ -104,7 +105,7 @@ public class ProdutoService {
 
     private Unidade findUnidadeById(Integer unidadeId) {
         return unidadeRepository.findById(unidadeId)
-                .orElseThrow(() -> new BussinessException("Unidade nao encontrada com id: " + unidadeId));
+                .orElseThrow(() -> new NotFoundException("Unidade não encontrada com id: " + unidadeId));
     }
 
 }

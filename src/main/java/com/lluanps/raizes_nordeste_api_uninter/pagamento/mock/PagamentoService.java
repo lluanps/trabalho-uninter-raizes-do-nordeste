@@ -2,6 +2,7 @@ package com.lluanps.raizes_nordeste_api_uninter.pagamento.mock;
 
 import com.lluanps.raizes_nordeste_api_uninter.enums.StatusPagamento;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.exceptions.NotFoundException;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.PaymentServiceUnavailableException;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.PaymentTimeoutException;
 import com.lluanps.raizes_nordeste_api_uninter.logs.model.LogAuditoria;
@@ -39,10 +40,10 @@ public class PagamentoService {
     public PagamentoResponse processar(Integer pedidoId, PagamentoRequest request,
                                        String emailUsuario) {
         Pedido pedido = pedidoRepository.findById(pedidoId)
-                .orElseThrow(() -> new BussinessException("Pedido nao encontrado com id: " + pedidoId));
+                .orElseThrow(() -> new NotFoundException("Pedido não encontrado com id: " + pedidoId));
 
         Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new BussinessException("Usuário não encontrado: " + emailUsuario));
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado: " + emailUsuario));
 
         String payloadReq = String.format(
                 "{\"pedidoId\":%d,\"valor\":%.2f,\"metodo\":\"%s\"}",

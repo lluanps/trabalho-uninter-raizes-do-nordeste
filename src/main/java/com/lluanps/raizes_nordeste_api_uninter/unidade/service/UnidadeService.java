@@ -1,6 +1,7 @@
 package com.lluanps.raizes_nordeste_api_uninter.unidade.service;
 
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.exceptions.NotFoundException;
 import com.lluanps.raizes_nordeste_api_uninter.unidade.dto.UnidadeRequest;
 import com.lluanps.raizes_nordeste_api_uninter.unidade.dto.UnidadeResponse;
 import com.lluanps.raizes_nordeste_api_uninter.unidade.model.Unidade;
@@ -29,7 +30,7 @@ public class UnidadeService {
     }
 
     public Unidade findUnidadeById(Integer id) {
-        return repository.findById(id).orElseThrow(() -> new BussinessException("Unidade nao encontrada com id: " + id));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Unidade não encontrada com id: " + id));
     }
 
     public Page<UnidadeResponse> listarUnidades(Pageable pageable) {

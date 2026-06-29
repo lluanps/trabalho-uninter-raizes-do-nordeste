@@ -8,6 +8,7 @@ import com.lluanps.raizes_nordeste_api_uninter.estoque.model.MovimentacaoEstoque
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.EstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.MovimentacaoEstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.exceptions.NotFoundException;
 import com.lluanps.raizes_nordeste_api_uninter.produto.model.Produto;
 import com.lluanps.raizes_nordeste_api_uninter.produto.repository.ProdutoRepository;
 import com.lluanps.raizes_nordeste_api_uninter.unidade.model.Unidade;
@@ -62,7 +63,7 @@ public class EstoqueService {
         estoque = repository.save(estoque);
 
         Usuario usuario = usuarioRepository.findByEmail(emailUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("Usuário não encontrado"));
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado: " + emailUsuario));
 
         MovimentacaoEstoque movimentacaoEstoque = MovimentacaoEstoque.builder()
                 .estoque(estoque)
@@ -78,17 +79,17 @@ public class EstoqueService {
 
     private Produto findProdutoById(Integer id) {
         return produtoRepository.findById(id)
-                .orElseThrow(() -> new BussinessException("Produto não encontrado com id: " + id));
+                .orElseThrow(() -> new NotFoundException("Produto não encontrado com id: " + id));
     }
 
     private Unidade findUnidadeById(Integer id) {
         return unidadeRepository.findById(id)
-                .orElseThrow(() -> new BussinessException("Unidade não encontrado com id: " + id));
+                .orElseThrow(() -> new NotFoundException("Unidade não encontrada com id: " + id));
     }
 
     public EstoqueResponse consultarEstoque(Integer unidadeId, Integer produtoId) {
         Estoque estoque = repository.findByProdutoIdAndUnidadeId(produtoId, unidadeId)
-                .orElseThrow(() -> new BussinessException("Não foi encontrado estoque para o produto de id: " + produtoId));
+                .orElseThrow(() -> new NotFoundException("Estoque não encontrado para o produto de id: " + produtoId));
 
         return toResponse(estoque);
     }

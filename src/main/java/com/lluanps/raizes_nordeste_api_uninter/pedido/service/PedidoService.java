@@ -8,6 +8,7 @@ import com.lluanps.raizes_nordeste_api_uninter.estoque.model.MovimentacaoEstoque
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.EstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.estoque.repository.MovimentacaoEstoqueRepository;
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.exceptions.NotFoundException;
 import com.lluanps.raizes_nordeste_api_uninter.fidelidade.service.FidelidadeService;
 import com.lluanps.raizes_nordeste_api_uninter.pedido.dto.*;
 import com.lluanps.raizes_nordeste_api_uninter.pedido.model.HistoricoStatusPedido;
@@ -225,17 +226,17 @@ public class PedidoService {
 
     private Pedido findPedidoById(Integer id) {
         return pedidoRepository.findById(id)
-                .orElseThrow(() -> new BussinessException("Pedido não encontrado: " + id));
+                .orElseThrow(() -> new NotFoundException("Pedido não encontrado: " + id));
     }
 
     private Usuario findUsuarioByEmail(String email) {
         return usuarioRepository.findByEmail(email)
-                .orElseThrow(() -> new BussinessException("Usuário não encontrado: " + email));
+                .orElseThrow(() -> new NotFoundException("Usuário não encontrado: " + email));
     }
 
     private Unidade findUnidadeById(Integer id) {
         return unidadeRepository.findById(id)
-                .orElseThrow(() -> new BussinessException("Unidade não encontrado: " + id));
+                .orElseThrow(() -> new NotFoundException("Unidade não encontrada: " + id));
     }
 
     public PedidoResponse toResponse(Pedido pedido, List<ItemPedido> itens) {

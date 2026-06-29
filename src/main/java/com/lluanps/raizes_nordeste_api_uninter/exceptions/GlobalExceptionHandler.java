@@ -54,6 +54,16 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(NotFoundException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.NOT_FOUND.value());
+        body.put("erro", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now().toString());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<Map<String, Object>> handleBadCredentials(BadCredentialsException ex) {
         Map<String, Object> body = new HashMap<>();
@@ -72,5 +82,25 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now().toString());
 
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(body);
+    }
+
+    @ExceptionHandler(PaymentServiceUnavailableException.class)
+    public ResponseEntity<Map<String, Object>> handlePaymentUnavailable(PaymentServiceUnavailableException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.SERVICE_UNAVAILABLE.value());
+        body.put("erro", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now().toString());
+
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(body);
+    }
+
+    @ExceptionHandler(PaymentTimeoutException.class)
+    public ResponseEntity<Map<String, Object>> handlePaymentTimeout(PaymentTimeoutException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.GATEWAY_TIMEOUT.value());
+        body.put("erro", ex.getMessage());
+        body.put("timestamp", LocalDateTime.now().toString());
+
+        return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(body);
     }
 }
