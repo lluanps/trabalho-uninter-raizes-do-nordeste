@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,6 +19,7 @@ public class ProdutoController {
     @Autowired
     private ProdutoService service;
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     @PostMapping
     public ResponseEntity<ProdutoResponse> criarProduto(@PathVariable Integer unidadeId,
             @Valid @RequestBody ProdutoRequest request) {
@@ -29,12 +31,14 @@ public class ProdutoController {
         return ResponseEntity.ok(service.listarUnidades(unidadeId, pageable));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     @PutMapping("/{id}")
     public ResponseEntity<ProdutoResponse> atualizar(@PathVariable Integer unidadeId, @PathVariable Integer id,
             @Valid @RequestBody ProdutoRequest request) {
         return ResponseEntity.ok(service.atualizar(unidadeId, id, request));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarProduto(@PathVariable Integer unidadeId, @PathVariable Integer id) {

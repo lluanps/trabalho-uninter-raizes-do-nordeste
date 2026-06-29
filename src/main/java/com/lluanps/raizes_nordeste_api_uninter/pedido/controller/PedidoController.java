@@ -10,6 +10,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -26,9 +27,10 @@ public class PedidoController {
     @PostMapping
     public ResponseEntity<PedidoResponse> registraNovoPedido(@Valid @RequestBody CriaPedidoRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {
-        return ResponseEntity.ok(service.registraNovoPedido(request, userDetails.getUsername()));
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.registraNovoPedido(request, userDetails.getUsername()));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE', 'ATENDENTE', 'COZINHA')")
     @GetMapping
     public ResponseEntity<Page<PedidoResponse>> listar(@RequestParam(required = false) CanalPedido canalPedido, @RequestParam(required = false) StatusPedido status,
             @RequestParam(required = false) Integer usuarioId, Pageable pageable) {
@@ -40,6 +42,7 @@ public class PedidoController {
         return ResponseEntity.ok(service.buscaPedidoPorId(id));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE', 'COZINHA', 'ATENDENTE')")
     @PutMapping("/{id}/status")
     public ResponseEntity<PedidoResponse> atualizarStatus(@PathVariable Integer id,@Valid @RequestBody StatusPedidoRequest request,
             @AuthenticationPrincipal UserDetails userDetails) {

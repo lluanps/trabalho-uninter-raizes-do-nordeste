@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,6 +20,7 @@ public class UnidadeController {
     @Autowired
     private UnidadeService service;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<UnidadeResponse> criarUnidade(@Valid @RequestBody UnidadeRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(service.criarUnidade(request));
@@ -34,16 +36,19 @@ public class UnidadeController {
         return ResponseEntity.ok(service.listarUnidades(pageable));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     @PutMapping("/{id}")
     public ResponseEntity<UnidadeResponse> atualizar(@PathVariable Integer id, @Valid @RequestBody UnidadeRequest request) {
         return ResponseEntity.ok(service.atualizar(id, request));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GERENTE')")
     @PutMapping("/desativar/{id}")
     public ResponseEntity<UnidadeResponse> desativarUnidade(@PathVariable Integer id) {
         return ResponseEntity.ok(service.desativarUnidade(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deletarUnidade(@PathVariable Integer id) {
