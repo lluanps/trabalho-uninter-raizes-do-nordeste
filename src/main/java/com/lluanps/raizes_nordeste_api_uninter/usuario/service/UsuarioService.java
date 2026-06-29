@@ -1,6 +1,7 @@
 package com.lluanps.raizes_nordeste_api_uninter.usuario.service;
 
 import com.lluanps.raizes_nordeste_api_uninter.exceptions.BussinessException;
+import com.lluanps.raizes_nordeste_api_uninter.exceptions.NotFoundException;
 import com.lluanps.raizes_nordeste_api_uninter.unidade.dto.UnidadeResponse;
 import com.lluanps.raizes_nordeste_api_uninter.unidade.model.Unidade;
 import com.lluanps.raizes_nordeste_api_uninter.usuario.dto.RegistroRequest;
@@ -22,7 +23,7 @@ public class UsuarioService {
     private UsuarioRepository repository;
 
     public Usuario findUsuarioById(Integer id) {
-        return repository.findById(id).orElseThrow(() -> new BussinessException("Usuario nao encontradoc com id: " + id));
+        return repository.findById(id).orElseThrow(() -> new NotFoundException("Usuário não encontrado com id: " + id));
     }
 
     public Page<UsuarioResponse> listarUsuarios(Pageable pageable) {
@@ -44,8 +45,10 @@ public class UsuarioService {
     }
 
     public void deletarUsuario(Integer id) {
-        Usuario usuarioById = findUsuarioById(id);
-        repository.deleteById(id);
+        Usuario usuario = findUsuarioById(id);
+        usuario.setAtivo(false);
+        usuario.setAtualizadoEm(LocalDateTime.now());
+        repository.save(usuario);
     }
 
     public UsuarioResponse toUsuario(Usuario usuario) {

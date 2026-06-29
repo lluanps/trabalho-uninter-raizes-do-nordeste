@@ -1,6 +1,7 @@
 package com.lluanps.raizes_nordeste_api_uninter.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -102,5 +103,15 @@ public class GlobalExceptionHandler {
         body.put("timestamp", LocalDateTime.now().toString());
 
         return ResponseEntity.status(HttpStatus.GATEWAY_TIMEOUT).body(body);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("status", HttpStatus.CONFLICT.value());
+        body.put("erro", "Operação não permitida: o registro possui dependências e não pode ser removido");
+        body.put("timestamp", LocalDateTime.now().toString());
+
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(body);
     }
 }
