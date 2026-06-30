@@ -1,0 +1,395 @@
+{
+  "info": {
+    "name": "Raízes do Nordeste API",
+    "description": "Coleção completa de endpoints da API REST da rede de lanchonetes Raízes do Nordeste.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "event": [{ "listen": "test", "script": { "exec": ["var json = pm.response.json();", "if (json.token) { pm.collectionVariables.set('token', json.token); }"], "type": "text/javascript" } }],
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@raizesdonordeste.com.br\",\n  \"senha\": \"Admin@123\"\n}" }
+          }
+        },
+        {
+          "name": "Login - credenciais inválidas (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth","login"] },
+            "body": { "mode": "raw", "raw": "{\n  \"email\": \"admin@raizesdonordeste.com.br\",\n  \"senha\": \"senhaerrada\"\n}" }
+          }
+        },
+        {
+          "name": "Registro de usuário",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/registro", "host": ["{{baseUrl}}"], "path": ["auth","registro"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Novo Cliente\",\n  \"email\": \"novo@email.com\",\n  \"senha\": \"Senha@123\",\n  \"cpf\": \"111.222.333-44\",\n  \"consentimentoLgpd\": true\n}" }
+          }
+        },
+        {
+          "name": "Registro - email inválido (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/registro", "host": ["{{baseUrl}}"], "path": ["auth","registro"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Teste\",\n  \"email\": \"emailinvalido\",\n  \"senha\": \"123\",\n  \"cpf\": \"111.222.333-44\",\n  \"consentimentoLgpd\": true\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Listar usuários",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/usuarios?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["usuarios"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Buscar usuário por ID",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/usuarios/1", "host": ["{{baseUrl}}"], "path": ["usuarios","1"] }
+          }
+        },
+        {
+          "name": "Atualizar usuário",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/usuarios/1", "host": ["{{baseUrl}}"], "path": ["usuarios","1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Administrador Atualizado\",\n  \"email\": \"admin@raizesdonordeste.com.br\",\n  \"senha\": \"Admin@123\",\n  \"cpf\": \"000.000.000-01\",\n  \"consentimentoLgpd\": true\n}" }
+          }
+        },
+        {
+          "name": "Deletar usuário",
+          "request": {
+            "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/usuarios/99", "host": ["{{baseUrl}}"], "path": ["usuarios","99"] }
+          }
+        },
+        {
+          "name": "Listar usuários - sem token (negativo)",
+          "request": {
+            "method": "GET", "header": [],
+            "url": { "raw": "{{baseUrl}}/usuarios", "host": ["{{baseUrl}}"], "path": ["usuarios"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Unidades",
+      "item": [
+        {
+          "name": "Criar unidade",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades", "host": ["{{baseUrl}}"], "path": ["unidades"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Unidade Recife Centro\",\n  \"endereco\": \"Rua da Aurora, 100, Recife - PE\",\n  \"telefone\": \"(81) 99999-0001\"\n}" }
+          }
+        },
+        {
+          "name": "Listar unidades",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["unidades"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Buscar unidade por ID",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1", "host": ["{{baseUrl}}"], "path": ["unidades","1"] }
+          }
+        },
+        {
+          "name": "Atualizar unidade",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1", "host": ["{{baseUrl}}"], "path": ["unidades","1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Unidade Recife Centro - Atualizada\",\n  \"endereco\": \"Rua da Aurora, 200, Recife - PE\",\n  \"telefone\": \"(81) 99999-0002\"\n}" }
+          }
+        },
+        {
+          "name": "Desativar unidade",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades/desativar/1", "host": ["{{baseUrl}}"], "path": ["unidades","desativar","1"] }
+          }
+        },
+        {
+          "name": "Deletar unidade",
+          "request": {
+            "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1", "host": ["{{baseUrl}}"], "path": ["unidades","1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Criar produto",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/produtos", "host": ["{{baseUrl}}"], "path": ["unidades","1","produtos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Tapioca de Queijo\",\n  \"descricao\": \"Tapioca artesanal com queijo coalho\",\n  \"preco\": 12.50,\n  \"categoria\": \"Salgado\"\n}" }
+          }
+        },
+        {
+          "name": "Listar produtos da unidade",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/produtos?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["unidades","1","produtos"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Atualizar produto",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/produtos/1", "host": ["{{baseUrl}}"], "path": ["unidades","1","produtos","1"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Tapioca de Queijo Coalho\",\n  \"descricao\": \"Tapioca artesanal com queijo coalho premium\",\n  \"preco\": 14.00,\n  \"categoria\": \"Salgado\"\n}" }
+          }
+        },
+        {
+          "name": "Remover produto",
+          "request": {
+            "method": "DELETE", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/produtos/1", "host": ["{{baseUrl}}"], "path": ["unidades","1","produtos","1"] }
+          }
+        },
+        {
+          "name": "Criar produto - unidade inexistente (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/9999/produtos", "host": ["{{baseUrl}}"], "path": ["unidades","9999","produtos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Produto Teste\",\n  \"preco\": 10.00\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Estoque",
+      "item": [
+        {
+          "name": "Entrada de estoque",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/estoque", "host": ["{{baseUrl}}"], "path": ["unidades","1","estoque"] },
+            "body": { "mode": "raw", "raw": "{\n  \"produtoId\": 1,\n  \"tipo\": \"ENTRADA\",\n  \"quantidade\": 50,\n  \"observacao\": \"Reposição semanal\"\n}" }
+          }
+        },
+        {
+          "name": "Saída de estoque",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/estoque", "host": ["{{baseUrl}}"], "path": ["unidades","1","estoque"] },
+            "body": { "mode": "raw", "raw": "{\n  \"produtoId\": 1,\n  \"tipo\": \"SAIDA\",\n  \"quantidade\": 5,\n  \"observacao\": \"Ajuste manual\"\n}" }
+          }
+        },
+        {
+          "name": "Consultar estoque do produto",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/estoque/1", "host": ["{{baseUrl}}"], "path": ["unidades","1","estoque","1"] }
+          }
+        },
+        {
+          "name": "Saída maior que saldo (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/unidades/1/estoque", "host": ["{{baseUrl}}"], "path": ["unidades","1","estoque"] },
+            "body": { "mode": "raw", "raw": "{\n  \"produtoId\": 1,\n  \"tipo\": \"SAIDA\",\n  \"quantidade\": 9999,\n  \"observacao\": \"Teste de estoque insuficiente\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pedidos",
+      "item": [
+        {
+          "name": "Criar pedido - APP",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"unidadeId\": 1,\n  \"canalPedido\": \"APP\",\n  \"itens\": [\n    { \"produtoId\": 1, \"quantidade\": 2 }\n  ],\n  \"formaPagamento\": \"PIX\"\n}" }
+          }
+        },
+        {
+          "name": "Criar pedido - TOTEM",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"unidadeId\": 1,\n  \"canalPedido\": \"TOTEM\",\n  \"itens\": [\n    { \"produtoId\": 1, \"quantidade\": 1 }\n  ],\n  \"formaPagamento\": \"CARTAO_CREDITO\"\n}" }
+          }
+        },
+        {
+          "name": "Listar pedidos",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/pedidos?page=0&size=10", "host": ["{{baseUrl}}"], "path": ["pedidos"], "query": [{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Filtrar pedidos por canal",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/pedidos?canalPedido=TOTEM&page=0&size=10", "host": ["{{baseUrl}}"], "path": ["pedidos"], "query": [{"key":"canalPedido","value":"TOTEM"},{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Filtrar pedidos por status",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/pedidos?status=PENDENTE&page=0&size=10", "host": ["{{baseUrl}}"], "path": ["pedidos"], "query": [{"key":"status","value":"PENDENTE"},{"key":"page","value":"0"},{"key":"size","value":"10"}] }
+          }
+        },
+        {
+          "name": "Buscar pedido por ID",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1", "host": ["{{baseUrl}}"], "path": ["pedidos","1"] }
+          }
+        },
+        {
+          "name": "Atualizar status - EM_PREPARO",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/status", "host": ["{{baseUrl}}"], "path": ["pedidos","1","status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"novoStatus\": \"EM_PREPARO\"\n}" }
+          }
+        },
+        {
+          "name": "Atualizar status - PRONTO",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/status", "host": ["{{baseUrl}}"], "path": ["pedidos","1","status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"novoStatus\": \"PRONTO\"\n}" }
+          }
+        },
+        {
+          "name": "Atualizar status - ENTREGUE",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/status", "host": ["{{baseUrl}}"], "path": ["pedidos","1","status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"novoStatus\": \"ENTREGUE\"\n}" }
+          }
+        },
+        {
+          "name": "Cancelar pedido",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/status", "host": ["{{baseUrl}}"], "path": ["pedidos","1","status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"novoStatus\": \"CANCELADO\"\n}" }
+          }
+        },
+        {
+          "name": "Criar pedido - canalPedido ausente (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"unidadeId\": 1,\n  \"itens\": [\n    { \"produtoId\": 1, \"quantidade\": 1 }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Criar pedido - produto inexistente (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos", "host": ["{{baseUrl}}"], "path": ["pedidos"] },
+            "body": { "mode": "raw", "raw": "{\n  \"unidadeId\": 1,\n  \"canalPedido\": \"APP\",\n  \"itens\": [\n    { \"produtoId\": 9999, \"quantidade\": 1 }\n  ]\n}" }
+          }
+        },
+        {
+          "name": "Transição de status inválida (negativo)",
+          "request": {
+            "method": "PUT", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/status", "host": ["{{baseUrl}}"], "path": ["pedidos","1","status"] },
+            "body": { "mode": "raw", "raw": "{\n  \"novoStatus\": \"ENTREGUE\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pagamentos",
+      "item": [
+        {
+          "name": "Processar pagamento (mock)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/pagamento", "host": ["{{baseUrl}}"], "path": ["pedidos","1","pagamento"] },
+            "body": { "mode": "raw", "raw": "{\n  \"metodoPagamento\": \"PIX\"\n}" }
+          }
+        },
+        {
+          "name": "Processar pagamento - valor alto recusado (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/2/pagamento", "host": ["{{baseUrl}}"], "path": ["pedidos","2","pagamento"] },
+            "body": { "mode": "raw", "raw": "{\n  \"metodoPagamento\": \"CARTAO_CREDITO\"\n}" }
+          }
+        },
+        {
+          "name": "Consultar pagamento do pedido",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/1/pagamento", "host": ["{{baseUrl}}"], "path": ["pedidos","1","pagamento"] }
+          }
+        },
+        {
+          "name": "Consultar pagamento - pedido inexistente (negativo)",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/pedidos/9999/pagamento", "host": ["{{baseUrl}}"], "path": ["pedidos","9999","pagamento"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Fidelidade",
+      "item": [
+        {
+          "name": "Registrar consentimento",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/fidelidade/consentimento", "host": ["{{baseUrl}}"], "path": ["fidelidade","consentimento"] }
+          }
+        },
+        {
+          "name": "Consultar saldo de pontos",
+          "request": {
+            "method": "GET", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+            "url": { "raw": "{{baseUrl}}/fidelidade/saldo", "host": ["{{baseUrl}}"], "path": ["fidelidade","saldo"] }
+          }
+        },
+        {
+          "name": "Resgatar pontos",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/fidelidade/resgate", "host": ["{{baseUrl}}"], "path": ["fidelidade","resgate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"pontos\": 10\n}" }
+          }
+        },
+        {
+          "name": "Resgatar pontos - saldo insuficiente (negativo)",
+          "request": {
+            "method": "POST", "header": [{ "key": "Authorization", "value": "Bearer {{token}}" },{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/fidelidade/resgate", "host": ["{{baseUrl}}"], "path": ["fidelidade","resgate"] },
+            "body": { "mode": "raw", "raw": "{\n  \"pontos\": 999999\n}" }
+          }
+        }
+      ]
+    }
+  ]
+}
